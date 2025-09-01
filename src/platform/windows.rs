@@ -1378,7 +1378,7 @@ pub fn install_me(options: &str, path: String, silent: bool, debug: bool) -> Res
         format!(
             "
 Set oWS = WScript.CreateObject(\"WScript.Shell\")
-sLinkFile = \"{tmp_path}\\{app_name}.lnk\"
+sLinkFile = \"{tmp_path}\\鸿伍售后支持.lnk\"
 
 Set oLink = oWS.CreateShortcut(sLinkFile)
     oLink.TargetPath = \"{exe}\"
@@ -1417,9 +1417,8 @@ oLink.Save
     let mut shortcuts = Default::default();
     if options.contains("desktopicon") {
         shortcuts = format!(
-            "copy /Y \"{}\\{}.lnk\" \"%PUBLIC%\\Desktop\\\"",
-            tmp_path,
-            crate::get_app_name()
+            "copy /Y \"{}\\鸿伍售后支持.lnk\" \"%PUBLIC%\\Desktop\\\"",
+            tmp_path
         );
         reg_value_desktop_shortcuts = "1".to_owned();
     }
@@ -1427,7 +1426,7 @@ oLink.Save
         shortcuts = format!(
             "{shortcuts}
 md \"{start_menu}\"
-copy /Y \"{tmp_path}\\{app_name}.lnk\" \"{start_menu}\\\"
+copy /Y \"{tmp_path}\\鸿伍售后支持.lnk\" \"{start_menu}\\\"
 copy /Y \"{tmp_path}\\Uninstall {app_name}.lnk\" \"{start_menu}\\\"
      "
         );
@@ -1449,7 +1448,7 @@ copy /Y \"{tmp_path}\\Uninstall {app_name}.lnk\" \"{start_menu}\\\"
 if exist \"{mk_shortcut}\" del /f /q \"{mk_shortcut}\"
 if exist \"{uninstall_shortcut}\" del /f /q \"{uninstall_shortcut}\"
 if exist \"{tray_shortcut}\" del /f /q \"{tray_shortcut}\"
-if exist \"{tmp_path}\\{app_name}.lnk\" del /f /q \"{tmp_path}\\{app_name}.lnk\"
+if exist "{tmp_path}\\鸿伍售后支持.lnk" del /f /q "{tmp_path}\\鸿伍售后支持.lnk"
 if exist \"{tmp_path}\\Uninstall {app_name}.lnk\" del /f /q \"{tmp_path}\\Uninstall {app_name}.lnk\"
 if exist \"{tmp_path}\\{app_name} Tray.lnk\" del /f /q \"{tmp_path}\\{app_name} Tray.lnk\"
         "
