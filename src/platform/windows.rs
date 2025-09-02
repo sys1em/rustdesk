@@ -95,9 +95,6 @@ pub const SET_FOREGROUND_WINDOW: &'static str = "SET_FOREGROUND_WINDOW";
 const REG_NAME_INSTALL_DESKTOPSHORTCUTS: &str = "DESKTOPSHORTCUTS";
 const REG_NAME_INSTALL_STARTMENUSHORTCUTS: &str = "STARTMENUSHORTCUTS";
 pub const REG_NAME_INSTALL_PRINTER: &str = "PRINTER";
-fn get_shortcut_name() -> &'static str {
-    "鸿伍售后支持"
-}
 
 pub fn get_focused_display(displays: Vec<DisplayInfo>) -> Option<usize> {
     unsafe {
@@ -1386,8 +1383,7 @@ sLinkFile = \"{tmp_path}\\{app_name}.lnk\"
 Set oLink = oWS.CreateShortcut(sLinkFile)
     oLink.TargetPath = \"{exe}\"
 oLink.Save
-        ",
-        app_name = get_shortcut_name()
+        "
         ),
         "vbs",
         "mk_shortcut",
@@ -1406,8 +1402,7 @@ Set oLink = oWS.CreateShortcut(sLinkFile)
     oLink.Arguments = \"--uninstall\"
     oLink.IconLocation = \"msiexec.exe\"
 oLink.Save
-        ",
-        app_name = get_shortcut_name()
+        "
         ),
         "vbs",
         "uninstall_shortcut",
@@ -1424,7 +1419,7 @@ oLink.Save
         shortcuts = format!(
             "copy /Y \"{}\\{}.lnk\" \"%PUBLIC%\\Desktop\\\"",
             tmp_path,
-            get_shortcut_name()
+            crate::get_app_name()
         );
         reg_value_desktop_shortcuts = "1".to_owned();
     }
@@ -1434,8 +1429,7 @@ oLink.Save
 md \"{start_menu}\"
 copy /Y \"{tmp_path}\\{app_name}.lnk\" \"{start_menu}\\\"
 copy /Y \"{tmp_path}\\Uninstall {app_name}.lnk\" \"{start_menu}\\\"
-     ",
-            app_name = get_shortcut_name()
+     "
         );
         reg_value_start_menu_shortcuts = "1".to_owned();
     }
@@ -1458,8 +1452,7 @@ if exist \"{tray_shortcut}\" del /f /q \"{tray_shortcut}\"
 if exist \"{tmp_path}\\{app_name}.lnk\" del /f /q \"{tmp_path}\\{app_name}.lnk\"
 if exist \"{tmp_path}\\Uninstall {app_name}.lnk\" del /f /q \"{tmp_path}\\Uninstall {app_name}.lnk\"
 if exist \"{tmp_path}\\{app_name} Tray.lnk\" del /f /q \"{tmp_path}\\{app_name} Tray.lnk\"
-        ",
-        app_name = get_shortcut_name()
+        "
     );
     let src_exe = std::env::current_exe()?.to_str().unwrap_or("").to_string();
 
@@ -1476,8 +1469,7 @@ if exist \"{tmp_path}\\{app_name} Tray.lnk\" del /f /q \"{tmp_path}\\{app_name} 
         format!("
 cscript \"{tray_shortcut}\"
 copy /Y \"{tmp_path}\\{app_name} Tray.lnk\" \"%PROGRAMDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\\"
-",
-            app_name = get_shortcut_name())
+")
     };
 
     let install_remote_printer = if install_printer {
@@ -1616,13 +1608,12 @@ fn get_uninstall(kill_self: bool, uninstall_printer: bool) -> String {
     {uninstall_amyuni_idd}
     if exist \"{path}\" rd /s /q \"{path}\"
     if exist \"{start_menu}\" rd /s /q \"{start_menu}\"
-    if exist "%PUBLIC%\Desktop\{shortcut_name}.lnk" del /f /q "%PUBLIC%\Desktop\{shortcut_name}.lnk"
-    if exist "%PROGRAMDATA%\Microsoft\Windows\Start Menu\Programs\Startup\{shortcut_name} Tray.lnk" del /f /q "%PROGRAMDATA%\Microsoft\Windows\Start Menu\Programs\Startup\{shortcut_name} Tray.lnk"
+    if exist \"%PUBLIC%\\Desktop\\{app_name}.lnk\" del /f /q \"%PUBLIC%\\Desktop\\{app_name}.lnk\"
+    if exist \"%PROGRAMDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\{app_name} Tray.lnk\" del /f /q \"%PROGRAMDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\{app_name} Tray.lnk\"
     ",
         before_uninstall=get_before_uninstall(kill_self),
         uninstall_amyuni_idd=get_uninstall_amyuni_idd(),
         app_name = crate::get_app_name(),
-        shortcut_name = get_shortcut_name(),
     )
 }
 
@@ -2876,7 +2867,7 @@ Set oLink = oWS.CreateShortcut(sLinkFile)
     oLink.Arguments = \"--tray\"
 oLink.Save
         ",
-            app_name = get_shortcut_name(),
+            app_name = crate::get_app_name(),
         ),
         "vbs",
         "tray_shortcut",
